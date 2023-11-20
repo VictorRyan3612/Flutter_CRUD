@@ -8,13 +8,13 @@ import '../data/var_json.dart';
 
 // Config Screen
 class ConfigScreen extends StatelessWidget{
-  final ValueNotifier<Brightness> currentBrightness;
+  final ValueNotifier<bool> currentIsDarkMode;
   final ValueNotifier<Locale> currentLocale;
   final ValueNotifier<String> currentColor;
   final ValueNotifier<String> currentStartScreen;
 
   const ConfigScreen({super.key, 
-    required this.currentBrightness, 
+    required this.currentIsDarkMode, 
     required this.currentLocale, 
     required this.currentColor, 
     required this.currentStartScreen
@@ -28,7 +28,7 @@ class ConfigScreen extends StatelessWidget{
     Future<void> saveSettings() async {
       final prefs = await SharedPreferences.getInstance();
 
-      prefs.setBool('isDarkMode', currentBrightness.value == Brightness.dark);
+      prefs.setBool('isDarkMode', currentIsDarkMode.value);
       prefs.setString('languageCode', currentLocale.value.languageCode);
       prefs.setString('colorTheme', currentColor.value);
       prefs.setString('startScreen', currentStartScreen.value);
@@ -64,15 +64,9 @@ class ConfigScreen extends StatelessWidget{
                           trueLabel: '', 
                           falseLabel: '',
                           label: AppLocalizations.of(context)!.configsModeTheme,
-                          initialValue:  currentBrightness.value == Brightness.dark,
+                          initialValue:  currentIsDarkMode.value,
                           onChanged: (value) {
-                            if (currentBrightness.value == Brightness.dark) {
-                              currentBrightness.value = Brightness.light;
-                            } 
-                            else {
-                              currentBrightness.value = Brightness.dark;
-                              
-                            }
+                            currentIsDarkMode.value = value;
                             saveSettings();
                           },
                         ),

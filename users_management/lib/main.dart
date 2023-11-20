@@ -24,7 +24,7 @@ class MainApp extends HookWidget {
   Widget build(BuildContext context) {
 
     // base states 
-    final currentBrightness = useState(Brightness.dark); //Theme
+    final currentIsDarkMode = useState(true); //Theme
     final currentLocale = useState(const Locale("en")); // Locale
     final currentColor = useState('Blue'); // Accent color
 
@@ -37,8 +37,8 @@ class MainApp extends HookWidget {
     Future<void> loadSettings() async {
       final prefs = await SharedPreferences.getInstance();
       
-      final isDarkMode = prefs.getBool('isDarkMode') ?? false;
-      currentBrightness.value = isDarkMode ? Brightness.dark : Brightness.light;
+      final isDarkMode = prefs.getBool('isDarkMode') ?? true;
+      currentIsDarkMode.value = isDarkMode;
 
       final languageCode = prefs.getString('languageCode') ?? 'en';
       currentLocale.value = Locale(languageCode);
@@ -54,7 +54,7 @@ class MainApp extends HookWidget {
     loadSettings();
 
     // /config/theme_config.dart
-    final finalTheme = setTheme(currentBrightness.value, currentColor.value);
+    final finalTheme = setTheme(currentIsDarkMode.value, currentColor.value);
 
 
     return MaterialApp(
@@ -91,7 +91,7 @@ class MainApp extends HookWidget {
         ),
         '/users': (context) => const UserScreen(),
         '/configs': (context) => ConfigScreen(
-          currentBrightness: currentBrightness,
+          currentIsDarkMode: currentIsDarkMode,
           currentLocale: currentLocale,
           currentColor: currentColor,
           currentStartScreen: currentStartScreen ,
